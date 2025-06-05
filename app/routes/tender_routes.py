@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
-from models.tender import Tender
-from controllers import tender_controller
+from app.models.tender import Tender
+from app.controllers import tender_controller
 
 router = APIRouter()
 
