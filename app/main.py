@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import startup_db_client, shutdown_db_client
-from app.routes import tender_routes
+from app.routes import api_router  # Import combined router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -12,7 +12,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Add CORS middleware
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(tender_routes.router)
+app.include_router(api_router, prefix="/api")
 
 @app.get("/")
 async def root():
