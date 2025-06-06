@@ -58,4 +58,7 @@ uvicorn app.main:app --reload
 ## 📦 API Endpoints
 
 - `GET /` – Health check
-- `GET /tenders/` – Fetch all tenders (JSON)
+- `GET /api/tenders/` – Fetch all tenders (JSON)
+- `GET /api/tenders/:tender_Id` – Fetch tender by tender_Id (JSON)
+- `GET /api/compatibility/` – Fetch all compatibility data (JSON)
+- `GET /api/compatibility/:tender_Id` – Fetch compatibility data by tender_Id (JSON)
