@@ -23,6 +23,7 @@ def serialize_mongo_document(doc):
 
 async def get_user_obj_id_from_token(request: Request) -> ObjectId:
     token = request.cookies.get("token")
+    print("token",token)
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
@@ -39,6 +40,7 @@ async def get_user_obj_id_from_token(request: Request) -> ObjectId:
 @router.post("/profile")
 async def create_profile(request: Request, data: ProfileCreate):
     db = request.app.mongodb
+    print("inside function")
     user_obj_id = await get_user_obj_id_from_token(request)
 
     # Check if user exists
