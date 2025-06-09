@@ -38,12 +38,12 @@ async def login(request: Request, response: Response, data: LoginRequest):
         httponly=True,
         max_age=3600,
         secure=True,
-        samesite="lax"
+        samesite="none"
     )
 
     return {"message": "Login successful"}
 
-@router.get("/auth/me")
+@router.get("/auth/verify")
 async def me(request: Request):
     token = request.cookies.get("token")
     db = request.app.mongodb
@@ -59,7 +59,7 @@ async def me(request: Request):
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 
-    return {"userId": str(user["_id"]), "email": user["email"], "name": user["name"]}
+    return {"userId": str(user["_id"]), "email": user["email"], "name": user["name"], "authenticated":True}
 
 @router.get("/auth/logout")
 def logout(response: Response):
