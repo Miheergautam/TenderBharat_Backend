@@ -54,7 +54,7 @@ async def login(request: Request, response: Response, data: LoginRequest):
             value=token,
             httponly=True,
             max_age=3600,
-            secure=False,
+            secure=True,
             samesite="none"
         )
         return {"message": "Login successful"}
@@ -110,7 +110,7 @@ def logout(response: Response):
         response.delete_cookie(
             key="token",
             httponly=True,
-            secure=False,
+            secure=True,
             samesite="none"
         )
         return {"message": "Logged out successfully"}
