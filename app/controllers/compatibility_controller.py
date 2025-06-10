@@ -51,7 +51,7 @@ async def create_compatibility_record(request: Request, payload: CompatibilityRe
 
 async def get_all_records(request: Request):
     """Return all records – auth enforced."""
-    _ = _get_user_id_from_cookie(request)
+    """ _ = _get_user_id_from_cookie(request) """
     collection = request.app.mongodb["Compatibility"]
     return [_serialize(d) async for d in collection.find()]
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, HTTPException
-from app.models.profile import ProfileCreate
+from app.models.profile import ProfileCreate , ProfileUpdate
 from app.controllers import profile_controller, auth_controller
 from bson import ObjectId
 
@@ -85,8 +85,8 @@ async def get_profile(request: Request):
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 
-@router.put("/profile")
-async def update_profile(request: Request, data: ProfileCreate):
+""" @router.put("/profile")
+async def update_profile(request: Request, data: ProfileUpdate):
     try:
         db = request.app.mongodb
         user_obj_id = await get_user_obj_id_from_token(request)
@@ -100,6 +100,34 @@ async def update_profile(request: Request, data: ProfileCreate):
             raise HTTPException(status_code=404, detail="Profile not found")
 
         await profile_controller.create_or_update_profile(str(user_obj_id), data.model_dump(), db)
+        return {"message": "Profile updated successfully"}
+
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+ """
+
+@router.put("/profile")
+async def update_profile(request: Request, data: ProfileUpdate):
+    try:
+        db = request.app.mongodb
+        user_obj_id = await get_user_obj_id_from_token(request)
+
+        # Get only the fields that were provided (ignore None values)
+        update_data = data.model_dump(exclude_unset=True, exclude_none=True)
+
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No valid fields provided for update")
+
+        result = await db.profiles.update_one(
+            {"user_id": user_obj_id},
+            {"$set": update_data}
+        )
+
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Profile not found")
+
         return {"message": "Profile updated successfully"}
 
     except HTTPException as http_exc:
