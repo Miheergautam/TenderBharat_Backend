@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
 from app.models.profile import ProfileCreate , ProfileUpdate
-from app.controllers import profile_controller, auth_controller
+from app.controllers import profile_controller, auth_controller , tender_controller
 from bson import ObjectId
 
 router = APIRouter()
@@ -129,6 +129,40 @@ async def update_profile(request: Request, data: ProfileUpdate):
             raise HTTPException(status_code=404, detail="Profile not found")
 
         return {"message": "Profile updated successfully"}
+
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+    
+
+@router.get("/profile/saved_tenders")
+async def get_saved_tenders(request: Request):
+    try:
+        db = request.app.mongodb
+        user_obj_id = await get_user_obj_id_from_token(request)
+
+        # Fetch user
+        user = await db.users.find_one({"_id": user_obj_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Fetch user's profile
+        profile = await profile_controller.get_profile_by_user_id(str(user_obj_id), db)
+        if not profile:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        
+        saved_tender_ids = profile["saved_tenders"]  # Assuming this is a list of tender IDs (as ObjectId or str)
+
+        # Fetch all tenders
+        all_tenders = await tender_controller.get_all_tenders(request)
+
+        # Filter tenders matching saved_tender_ids
+        matched_tenders = [
+            tender for tender in all_tenders if str(tender["_id"]) in saved_tender_ids
+        ]
+
+        return {"saved_tenders": matched_tenders}
 
     except HTTPException as http_exc:
         raise http_exc

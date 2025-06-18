@@ -40,6 +40,7 @@ class ProfileCreate(BaseModel):
     bridge_work: BridgeComfort = Field(..., description="Details about bridge work comfort and limits")
     tender_amount_range: TenderAmountRange = Field(..., description="Preferred range for tender amounts")
     description: str = Field(..., example="Nav Bharat is a civil construction company focusing on hilly terrain projects.", description="Short description of the company")
+    saved_tenders:Optional[List[str]] = Field(None, example=["tender_id1", "tender_id2", "tender_id2"], description="saved tender's for this profile")
 
 # Update model with all fields optional
 class ProfileUpdate(BaseModel):
@@ -54,6 +55,7 @@ class ProfileUpdate(BaseModel):
     bridge_work: Optional[BridgeComfort] = Field(None, description="Details about bridge work comfort and limits")
     tender_amount_range: Optional[TenderAmountRange] = Field(None, description="Preferred range for tender amounts")
     description: Optional[str] = Field(None, example="Updated company description", description="Short description of the company")
+    saved_tenders:Optional[List[str]] = Field(None, example=["tender_id1", "tender_id2", "tender_id2"], description="saved tender's for this profile")
 
     class Config:
         # Allow extra fields to be ignored during validation
