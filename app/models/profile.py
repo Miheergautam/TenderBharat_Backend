@@ -27,6 +27,17 @@ class TenderAmountRange(BaseModel):
     lower_limit: int = Field(..., example=50, description="Minimum preferred tender amount (in Cr)")
     upper_limit: int = Field(..., example=150, description="Maximum preferred tender amount (in Cr)")
 
+class CompanyInfo(BaseModel):
+    company_id: str = Field()
+    hq_location: List[float] = Field()
+    regional_sites: List[List[float]] = Field()
+    ongoing_sites: List[List[float]] = Field()
+    past_sites:List[List[float]] = Field()
+    preferred_tender_amount_range:List[int]=Field()
+    weather_experience:List[str] = Field()
+    terrain_experience:List[str] = Field()
+
+
 # Create model remains strict for initial creation
 class ProfileCreate(BaseModel):
     company_name: str = Field(..., example="Nav Bharat Construction Company", description="Legal name of the company")
@@ -40,7 +51,9 @@ class ProfileCreate(BaseModel):
     bridge_work: BridgeComfort = Field(..., description="Details about bridge work comfort and limits")
     tender_amount_range: TenderAmountRange = Field(..., description="Preferred range for tender amounts")
     description: str = Field(..., example="Nav Bharat is a civil construction company focusing on hilly terrain projects.", description="Short description of the company")
-    saved_tenders:Optional[List[str]] = Field(None, example=["tender_id1", "tender_id2", "tender_id2"], description="saved tender's for this profile")
+    saved_tenders:Optional[List[str]] = Field(None, example=["tender_id1", "tender_id2", "tender_id3"], description="saved tender's for this profile")
+    company_info: Optional[CompanyInfo] = Field(None, description="Company Info details")
+
 
 # Update model with all fields optional
 class ProfileUpdate(BaseModel):
@@ -56,6 +69,8 @@ class ProfileUpdate(BaseModel):
     tender_amount_range: Optional[TenderAmountRange] = Field(None, description="Preferred range for tender amounts")
     description: Optional[str] = Field(None, example="Updated company description", description="Short description of the company")
     saved_tenders:Optional[List[str]] = Field(None, example=["tender_id1", "tender_id2", "tender_id2"], description="saved tender's for this profile")
+    company_info: Optional[CompanyInfo] = Field(None, description="Company Info details")
+
 
     class Config:
         # Allow extra fields to be ignored during validation
