@@ -24,10 +24,9 @@ async def get_by_user_and_tender(
     return await compatibility_controller.get_by_user_and_tender(request, user_id, tender_id)
 
 # GET /compatibility/user/{user_id}
-@router.get("/compatibility/user/{user_id}")
-async def get_by_user(request: Request, user_id: str):
-    return await compatibility_controller.get_by_user(request, user_id)
-
+@router.get("/compatibility/user")
+async def get_by_user(request: Request):
+    return await compatibility_controller.get_by_user(request)
 # GET /compatibility/tender/{tender_id}
 @router.get("/compatibility/tender/{tender_id}")
 async def get_by_tender(request: Request, tender_id: str):

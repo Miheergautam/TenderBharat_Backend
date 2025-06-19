@@ -70,9 +70,9 @@ async def get_by_user_and_tender(request: Request, user_id: str, tender_id: str)
         raise HTTPException(status_code=404, detail="Record not found")
     return _serialize(doc)
 
-async def get_by_user(request: Request, user_id: str):
+async def get_by_user(request: Request):
     """All records for one user – auth enforced."""
-    _ = _get_user_id_from_cookie(request)
+    user_id = _get_user_id_from_cookie(request)
     _validate_object_id(user_id, "user_id")
     collection = request.app.mongodb["Compatibility"]
     return [_serialize(d) async for d in collection.find({"user_id": ObjectId(user_id)})]
