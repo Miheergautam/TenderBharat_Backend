@@ -16,6 +16,7 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "http://localhost:8080",
     "http://192.168.1.5:8080",
+    "https://tenderbharat.vercel.app/"
 ]
 
 app.add_middleware(
